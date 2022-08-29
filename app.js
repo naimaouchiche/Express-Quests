@@ -11,16 +11,22 @@ const welcome = (req, res) => {
   res.send("Welcome to my favourite movie list");
 };
 
+//GET
+
 app.get("/", welcome);
 
 const movieHandlers = require("./movieHandlers");
+const userHandlers = require("./userHandlers");
 
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
-app.get("/api/users", movieHandlers.getUsers);
-app.get("/api/users/:id", movieHandlers.getUsersById);
+app.get("/api/users", userHandlers.getUsers);
+app.get("/api/users/:id", userHandlers.getUserById);
+
+// POST
+
 app.post("/api/movies", movieHandlers.postMovie);
-app.post("/api/users", movieHandlers.postUsers);
+app.post("/api/users", userHandlers.postUser);
 
 app.listen(port, (err) => {
   if (err) {
