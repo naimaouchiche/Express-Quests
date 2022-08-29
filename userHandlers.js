@@ -18,10 +18,34 @@ const postUser = (req, res) => {
 };
 
 const getUsers = (req, res) => {
+  let initialSql = "select * from users";
+  const sqlValues = [];
+
+  if (req.query.language != null) {
+    sqlValues.push ({
+      column: "language",
+      value: req.query.language, 
+      operator:"=",
+    });
+  }
+  if (req.query.city != null) {
+    sqlValues.push ({
+      column: "city",
+      value: req.query.city,
+      operator: "=",
+    })
+  }
+
     database
-      .query("select * from users")
+      .query(
+        sqlValues.reduce(
+          (sql, { column, operator }, index) =>
+          `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+          initialSql),
+          sqlValues.map(({ value }) => value)
+      )
       .then(([users]) => {
-        res.json(users);
+        res.status(200).json(users);
       })
       .catch((err) => {
         console.error(err);
